@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍽️ Menyu - Delicious Restaurant</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>Delicious Restaurant</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Nyumbani</a>
+                <a href="menu.html" class="nav-link active"><i class="fas fa-utensils"></i> Menyu</a>
+                <a href="cart.html" class="nav-link cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="admin.html" class="nav-link admin-link">
+                    <i class="fas fa-user-cog"></i> Admin
+                </a>
+            </div>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Menu Header -->
+    <section class="menu-header">
+        <div class="container">
+            <h1><i class="fas fa-utensils"></i> Menyu Yetu</h1>
+            <p>Chagua kati ya vyakula vyetu vitamu vyote</p>
+            
+            <!-- Order Type Selection -->
+            <div class="order-type-selector">
+                <div class="type-option" data-type="dine-in">
+                    <i class="fas fa-chair"></i>
+                    <span>Kukaa Ndani</span>
+                </div>
+                <div class="type-option active" data-type="takeaway">
+                    <i class="fas fa-box"></i>
+                    <span>Kuchukua Nje</span>
+                </div>
+                <div class="type-option" data-type="delivery">
+                    <i class="fas fa-motorcycle"></i>
+                    <span>Upelekaji</span>
+                </div>
+            </div>
+            
+            <!-- Search and Filters -->
+            <div class="menu-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="menuSearch" placeholder="Tafuta chakula...">
+                </div>
+                
+                <div class="filters">
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">Kategoria Zote</option>
+                    </select>
+                    
+                    <button class="filter-btn" data-filter="vegetarian">
+                        <i class="fas fa-leaf"></i> Mboga
+                    </button>
+                    
+                    <button class="filter-btn" data-filter="spicy">
+                        <i class="fas fa-pepper-hot"></i> Spicy
+                    </button>
+                    
+                    <button class="filter-btn" data-filter="available">
+                        <i class="fas fa-check-circle"></i> Inapatikana
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Categories -->
+    <section class="menu-categories">
+        <div class="container">
+            <div class="categories-nav" id="categoriesNav">
+                <!-- Categories will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Items -->
+    <section class="menu-items-section">
+        <div class="container">
+            <div id="menuItemsContainer">
+                <!-- Menu items will be loaded here -->
+            </div>
+            
+            <div id="noItemsMessage" class="no-items">
+                <i class="fas fa-search"></i>
+                <h3>Hakuna Vya Kuliwa Vilivyopatikana</h3>
+                <p>Badilisha vichujio vyako au utafute kitu kingine</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Cart Yako</h3>
+            <button class="close-cart" onclick="closeCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be loaded here -->
+        </div>
+        
+        <div class="cart-summary">
+            <div class="summary-item">
+                <span>Jumla:</span>
+                <span id="cartTotal">Tsh 0</span>
+            </div>
+            <div class="summary-item">
+                <span>Usafirishaji:</span>
+                <span id="cartDelivery">Tsh 0</span>
+            </div>
+            <div class="summary-item total">
+                <span>Jumla ya Kulipa:</span>
+                <span id="cartGrandTotal">Tsh 0</span>
+            </div>
+            
+            <button class="btn btn-primary btn-block" onclick="goToCheckout()">
+                <i class="fas fa-credit-card"></i> Endelea kwa Checkout
+            </button>
+            
+            <button class="btn btn-secondary btn-block" onclick="clearCart()">
+                <i class="fas fa-trash"></i> Futa Cart
+            </button>
+        </div>
+    </div>
+    
+    <div class="cart-overlay" onclick="closeCart()"></div>
+
+    <!-- Floating Cart Button -->
+    <button class="floating-cart-btn" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-count">0</span>
+    </button>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-utensils"></i>
+                        <span>Delicious Restaurant</span>
+                    </div>
+                    <p>Chakula bora, ladha bora, huduma bora.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Masaa ya Huduma</h3>
+                    <p>Jumatatu - Ijumaa: 8:00 AM - 10:00 PM</p>
+                    <p>Jumamosi - Jumapili: 9:00 AM - 11:00 PM</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Mawasiliano</h3>
+                    <p><i class="fas fa-phone"></i> 0712 345 678</p>
+                    <p><i class="fas fa-envelope"></i> info@delicious.co.tz</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Delicious Restaurant. Haki zote zimehifadhiwa.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/menu.js"></script>
+    <style>
+        /* Menu Page Specific Styles */
+        .menu-header {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .menu-header h1 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .order-type-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .type-option {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .type-option:hover,
+        .type-option.active {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .menu-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-select {
+            padding: 0.75rem;
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .menu-categories {
+            background: white;
+            padding: 2rem 0;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 80px;
+            z-index: 100;
+        }
+        
+        .categories-nav {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+        }
+        
+        .category-btn {
+            background: var(--gray-100);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: var(--transition);
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .menu-items-section {
+            padding: 3rem 0;
+        }
+        
+        .menu-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .menu-item-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .menu-item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .menu-item-image {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .menu-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .menu-item-card:hover .menu-item-image img {
+            transform: scale(1.1);
+        }
+        
+        .item-badges {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .badge.veg {
+            background: var(--food-green);
+        }
+        
+        .badge.spicy {
+            background: var(--food-red);
+        }
+        
+        .badge.unavailable {
+            background: var(--danger);
+        }
+        
+        .menu-item-content {
+            padding: 1.5rem;
+        }
+        
+        .menu-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .item-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+        
+        .item-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+        
+        .item-description {
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .item-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .item-category {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .item-rating {
+            color: var(--warning);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-weight: 500;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gray-100);
+            border-radius: var(--radius);
+            padding: 0.5rem;
+        }
+        
+        .qty-btn {
+            background: none;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+        
+        .qty-btn:hover {
+            background: var(--gray-200);
+        }
+        
+        .qty-value {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .no-items {
+            text-align: center;
+            padding: 4rem 2rem;
+            display: none;
+        }
+        
+        .no-items i {
+            font-size: 4rem;
+            color: var(--gray-300);
+            margin-bottom: 1rem;
+        }
+        
+        /* Cart Sidebar */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: var(--shadow-xl);
+            z-index: 2000;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .cart-sidebar.open {
+            right: 0;
+        }
+        
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+        
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius);
+            background: var(--gray-50);
+            margin-bottom: 1rem;
+        }
+        
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--gray-500);
+        }
+        
+        .cart-summary {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        
+        .summary-item.total {
+            border-top: 2px solid var(--gray-300);
+            padding-top: 0.75rem;
+            margin-top: 0.75rem;
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+        
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+            display: none;
+        }
+        
+        .cart-overlay.show {
+            display: block;
+        }
+        
+        .floating-cart-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        .floating-cart-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .floating-cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.75rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 768px) {
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .menu-controls {
+                flex-direction: column;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .filter-select,
+            .filter-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</body>
+</html>

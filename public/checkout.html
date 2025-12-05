@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💳 Checkout - Delicious Restaurant</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💳</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>Delicious Restaurant</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Nyumbani</a>
+                <a href="menu.html" class="nav-link"><i class="fas fa-utensils"></i> Menyu</a>
+                <a href="cart.html" class="nav-link"><i class="fas fa-shopping-cart"></i> Cart</a>
+            </div>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Checkout Page -->
+    <section class="checkout-page">
+        <div class="container">
+            <div class="checkout-header">
+                <h1><i class="fas fa-credit-card"></i> Kamilisha Agizo Lako</h1>
+                <p>Jaza maelezo yako na uchague njia ya malipo</p>
+            </div>
+            
+            <div class="checkout-steps">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <div class="step-info">
+                        <span>Maelezo ya Mteja</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-info">
+                        <span>Malipo</span>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-info">
+                        <span>Uthibitisho</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checkout-content">
+                <!-- Customer Details Form -->
+                <div class="checkout-form-section">
+                    <h2><i class="fas fa-user"></i> Maelezo ya Mteja</h2>
+                    
+                    <form id="customerForm" class="checkout-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customerName"><i class="fas fa-user"></i> Jina Kamili *</label>
+                                <input type="text" id="customerName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="customerPhone"><i class="fas fa-phone"></i> Namba ya Simu *</label>
+                                <input type="tel" id="customerPhone" required pattern="[0-9]{10}">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="customerEmail"><i class="fas fa-envelope"></i> Barua Pepe</label>
+                                <input type="email" id="customerEmail">
+                            </div>
+                        </div>
+                        
+                        <!-- Order Type Display -->
+                        <div class="order-type-display">
+                            <h3><i class="fas fa-info-circle"></i> Aina ya Agizo</h3>
+                            <div class="type-display" id="orderTypeDisplay">
+                                <!-- Order type will be displayed here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Order Summary -->
+                        <div class="order-summary-checkout">
+                            <h3><i class="fas fa-receipt"></i> Muhtasari wa Agizo</h3>
+                            <div id="orderSummaryCheckout">
+                                <!-- Order summary will be displayed here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Method Selection -->
+                        <div class="payment-method-section">
+                            <h3><i class="fas fa-credit-card"></i> Chagua Njia ya Malipo</h3>
+                            <div class="payment-methods-grid">
+                                <div class="payment-method" data-method="cash">
+                                    <div class="method-icon">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="method-info">
+                                        <h4>Pesa Taslimu</h4>
+                                        <p>Lipa pesa taslimu unapopokea chakula</p>
+                                    </div>
+                                    <div class="method-select">
+                                        <input type="radio" name="paymentMethod" value="cash" checked>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-method" data-method="mpesa">
+                                    <div class="method-icon">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="method-info">
+                                        <h4>M-Pesa</h4>
+                                        <p>Tuma pesa kupitia M-Pesa</p>
+                                    </div>
+                                    <div class="method-select">
+                                        <input type="radio" name="paymentMethod" value="mpesa">
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-method" data-method="card">
+                                    <div class="method-icon">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <div class="method-info">
+                                        <h4>Kadi ya Benki</h4>
+                                        <p>Lipa kwa kadi ya benki ya Visa au Mastercard</p>
+                                    </div>
+                                    <div class="method-select">
+                                        <input type="radio" name="paymentMethod" value="card">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- M-Pesa Details (hidden by default) -->
+                        <div id="mpesaDetails" class="payment-details" style="display: none;">
+                            <h4><i class="fas fa-mobile-alt"></i> Maelezo ya M-Pesa</h4>
+                            <div class="form-group">
+                                <label for="mpesaNumber">Namba ya M-Pesa *</label>
+                                <input type="tel" id="mpesaNumber" pattern="[0-9]{10}">
+                            </div>
+                            <div class="mpesa-instructions">
+                                <p><i class="fas fa-info-circle"></i> Utapewa stakabadhi ya malipo kupitia SMS</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Details (hidden by default) -->
+                        <div id="cardDetails" class="payment-details" style="display: none;">
+                            <h4><i class="fas fa-credit-card"></i> Maelezo ya Kadi</h4>
+                            <div class="form-group">
+                                <label for="cardNumber">Namba ya Kadi *</label>
+                                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cardExpiry">Tarehe ya Mwisho *</label>
+                                    <input type="text" id="cardExpiry" placeholder="MM/YY">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cardCVC">CVC *</label>
+                                    <input type="text" id="cardCVC" placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Terms and Conditions -->
+                        <div class="terms-section">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="acceptTerms" required>
+                                <label for="acceptTerms">
+                                    Nimekubaliana na 
+                                    <a href="#" onclick="showTerms()">Masharti na Masharti</a>
+                                    ya Delicious Restaurant
+                                </label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="receiveUpdates">
+                                <label for="receiveUpdates">
+                                    Ningependa kupokea sasisho na ofa kwenye barua pepe
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button type="button" class="btn btn-secondary" onclick="goBackToCart()">
+                                <i class="fas fa-arrow-left"></i> Rudi kwenye Cart
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check-circle"></i> Kamilisha Agizo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Order Summary Sidebar -->
+                <div class="order-summary-sidebar">
+                    <div class="summary-card">
+                        <h3><i class="fas fa-shopping-bag"></i> Agizo Lako</h3>
+                        
+                        <div class="order-items-summary" id="orderItemsSummary">
+                            <!-- Order items will be displayed here -->
+                        </div>
+                        
+                        <div class="price-breakdown">
+                            <div class="price-row">
+                                <span>Jumla ya Vitu:</span>
+                                <span id="priceSubtotal">Tsh 0</span>
+                            </div>
+                            <div class="price-row">
+                                <span>Usafirishaji:</span>
+                                <span id="priceDelivery">Tsh 0</span>
+                            </div>
+                            <div class="price-row">
+                                <span>Kodi (18%):</span>
+                                <span id="priceTax">Tsh 0</span>
+                            </div>
+                            <div class="price-row total">
+                                <span>Jumla ya Kulipa:</span>
+                                <span id="priceTotal">Tsh 0</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Estimated Time -->
+                        <div class="estimated-time">
+                            <i class="fas fa-clock"></i>
+                            <div class="time-info">
+                                <span>Muda unaokadiriwa:</span>
+                                <strong id="estimatedTime">30 dakika</strong>
+                            </div>
+                        </div>
+                        
+                        <!-- Contact Support -->
+                        <div class="support-info">
+                            <h4><i class="fas fa-headset"></i> Usaidizi wa Mteja</h4>
+                            <p>Tuko hapa kukusaidia ikiwa una swali lolote.</p>
+                            <div class="contact-methods">
+                                <a href="tel:+255712345678" class="support-contact">
+                                    <i class="fas fa-phone"></i> 0712 345 678
+                                </a>
+                                <a href="mailto:support@delicious.co.tz" class="support-contact">
+                                    <i class="fas fa-envelope"></i> support@delicious.co.tz
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-check-circle"></i> Agizo Limekamilika!</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="confirmation-icon">
+                    <i class="fas fa-concierge-bell"></i>
+                </div>
+                <p id="confirmationMessage">Asante kwa agizo lako! Tumeipokea na tunafanya kazi nayo.</p>
+                
+                <div class="order-details-modal">
+                    <div class="detail-item">
+                        <span class="label">Namba ya Agizo:</span>
+                        <span id="modalOrderNumber" class="value">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Jina:</span>
+                        <span id="modalCustomerName" class="value">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Tarehe:</span>
+                        <span id="modalOrderDate" class="value">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Jumla:</span>
+                        <span id="modalOrderTotal" class="value">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Muda unaokadiriwa:</span>
+                        <span id="modalEstimatedTime" class="value">-</span>
+                    </div>
+                </div>
+                
+                <div class="confirmation-instructions">
+                    <p><i class="fas fa-info-circle"></i> Utapewa simu ya uthibitisho ndani ya dakika chache.</p>
+                    <p><i class="fas fa-clock"></i> Tafadhali wasili mapema ikiwa ni agizo la kukaa ndani.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Funga
+                </button>
+                <button class="btn btn-primary" onclick="printReceipt()">
+                    <i class="fas fa-print"></i> Chapisha Risiti
+                </button>
+                <button class="btn btn-success" onclick="trackOrder()">
+                    <i class="fas fa-map-marker-alt"></i> Fuata Agizo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-utensils"></i>
+                        <span>Delicious Restaurant</span>
+                    </div>
+                    <p>Chakula bora, ladha bora, huduma bora.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Masaa ya Huduma</h3>
+                    <p>Jumatatu - Ijumaa: 8:00 AM - 10:00 PM</p>
+                    <p>Jumamosi - Jumapili: 9:00 AM - 11:00 PM</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Usaidizi</h3>
+                    <p><i class="fas fa-phone"></i> 0712 345 678</p>
+                    <p><i class="fas fa-envelope"></i> support@delicious.co.tz</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Delicious Restaurant. Haki zote zimehifadhiwa.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/checkout.js"></script>
+    <style>
+        /* Checkout Page Specific Styles */
+        .checkout-page {
+            padding: 3rem 0;
+        }
+        
+        .checkout-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .checkout-steps {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            opacity: 0.5;
+            transition: var(--transition);
+        }
+        
+        .step.active {
+            opacity: 1;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--gray-200);
+            color: var(--gray-700);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .checkout-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+        
+        .checkout-form-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .checkout-form-section h2 {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .checkout-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: var(--gray-700);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group input {
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+        
+        .order-type-display {
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+        
+        .order-type-display h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .type-display {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: var(--radius);
+            border: 2px solid var(--primary-light);
+        }
+        
+        .type-display i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .order-summary-checkout {
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+        
+        .order-summary-checkout h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .payment-method-section {
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+        
+        .payment-method-section h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .payment-methods-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: var(--radius);
+            border: 2px solid var(--gray-200);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .payment-method:hover,
+        .payment-method.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        
+        .method-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .method-info {
+            flex: 1;
+        }
+        
+        .method-info h4 {
+            margin-bottom: 0.25rem;
+        }
+        
+        .method-info p {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin: 0;
+        }
+        
+        .payment-details {
+            padding: 1.5rem;
+            background: white;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-300);
+        }
+        
+        .terms-section {
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .checkbox-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        /* Order Summary Sidebar */
+        .order-summary-sidebar {
+            position: sticky;
+            top: 120px;
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .summary-card h3 {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .order-items-summary {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+        }
+        
+        .order-item-summary {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .order-item-summary:last-child {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            font-weight: 500;
+        }
+        
+        .item-quantity {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+        
+        .item-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .price-breakdown {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .price-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .price-row.total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-top: 2px solid var(--gray-300);
+            padding-top: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        
+        .estimated-time {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--primary-light);
+            border-radius: var(--radius);
+            margin-bottom: 2rem;
+        }
+        
+        .estimated-time i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .time-info span {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+        
+        .support-info {
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+        
+        .support-info h4 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .support-contact {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .support-contact:hover {
+            text-decoration: underline;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 500px;
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .modal-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .confirmation-icon {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .confirmation-icon i {
+            font-size: 4rem;
+            color: var(--success);
+        }
+        
+        .order-details-modal {
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-item .label {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .detail-item .value {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .confirmation-instructions {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: var(--radius);
+            padding: 1rem;
+            color: #0369a1;
+        }
+        
+        .confirmation-instructions p {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .checkout-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-summary-sidebar {
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .checkout-steps {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .modal-footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

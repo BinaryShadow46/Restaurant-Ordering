@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👨‍💼 Admin - Delicious Restaurant</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👨‍💼</text></svg>">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>Delicious Admin</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Nyumbani</a>
+                <a href="admin.html" class="nav-link active"><i class="fas fa-user-cog"></i> Dashboard</a>
+                <button class="btn btn-secondary btn-sm" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Toka
+                </button>
+            </div>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Admin Dashboard -->
+    <section class="admin-dashboard">
+        <div class="container">
+            <!-- Admin Header -->
+            <div class="admin-header">
+                <h1><i class="fas fa-user-cog"></i> Dashibodi ya Msimamizi</h1>
+                <p>Dhibiti na uangalie mfumo wote wa mgahawa</p>
+                
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalOrders">0</h3>
+                            <span>Agizo Leo</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="todayRevenue">Tsh 0</h3>
+                            <span>Mapato Leo</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingOrders">0</h3>
+                            <span>Inasubiri</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalCustomers">0</h3>
+                            <span>Wateja</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Admin Content -->
+            <div class="admin-content">
+                <!-- Left Column -->
+                <div class="admin-left">
+                    <!-- Orders Management -->
+                    <div class="admin-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-list"></i> Usimamizi wa Maagizo</h3>
+                            <div class="card-actions">
+                                <button class="btn btn-primary btn-sm" onclick="refreshOrders()">
+                                    <i class="fas fa-sync-alt"></i> Sasisha
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="exportOrders()">
+                                    <i class="fas fa-download"></i> Pakua
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Orders Filter -->
+                        <div class="orders-filter">
+                            <input type="text" id="searchOrders" placeholder="Tafuta agizo..." class="search-input">
+                            <select id="statusFilter" class="filter-select">
+                                <option value="">Hali Zote</option>
+                                <option value="pending">Inasubiri</option>
+                                <option value="confirmed">Imethibitishwa</option>
+                                <option value="preparing">Inatayarishwa</option>
+                                <option value="ready">Imetayarishwa</option>
+                                <option value="delivered">Imefikishwa</option>
+                                <option value="completed">Imekamilika</option>
+                                <option value="cancelled">Imeghairiwa</option>
+                            </select>
+                            <select id="dateFilter" class="filter-select">
+                                <option value="today">Leo</option>
+                                <option value="yesterday">Jana</option>
+                                <option value="week">Wiki Hii</option>
+                                <option value="month">Mwezi Huu</option>
+                                <option value="all">Wakati Wote</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Orders Table -->
+                        <div class="orders-table-container">
+                            <table class="orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Namba</th>
+                                        <th>Mteja</th>
+                                        <th>Tarehe</th>
+                                        <th>Jumla</th>
+                                        <th>Hali</th>
+                                        <th>Malipo</th>
+                                        <th>Vitendo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTableBody">
+                                    <!-- Orders will be loaded here -->
+                                </tbody>
+                            </table>
+                            <div id="noOrders" class="no-data">
+                                <i class="fas fa-list"></i>
+                                <p>Hakuna agizo lililopatikana</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Orders Pagination -->
+                        <div class="pagination" id="ordersPagination">
+                            <button class="page-btn" onclick="prevPage()">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span class="page-info" id="pageInfo">Safu 1 ya 1</span>
+                            <button class="page-btn" onclick="nextPage()">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Menu Management -->
+                    <div class="admin-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-utensils"></i> Usimamizi wa Menyu</h3>
+                            <div class="card-actions">
+                                <button class="btn btn-primary btn-sm" onclick="showAddItemModal()">
+                                    <i class="fas fa-plus"></i> Ongeza Kipya
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Menu Items Table -->
+                        <div class="menu-table-container">
+                            <table class="menu-table">
+                                <thead>
+                                    <tr>
+                                        <th>Picha</th>
+                                        <th>Jina</th>
+                                        <th>Kategoria</th>
+                                        <th>Bei</th>
+                                        <th>Inapatikana</th>
+                                        <th>Vitendo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="menuTableBody">
+                                    <!-- Menu items will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="admin-right">
+                    <!-- Analytics Charts -->
+                    <div class="admin-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-line"></i> Takwimu</h3>
+                            <select id="chartPeriod" class="filter-select" onchange="loadAnalytics()">
+                                <option value="day">Leo</option>
+                                <option value="week">Wiki</option>
+                                <option value="month">Mwezi</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Status Overview -->
+                    <div class="admin-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-tasks"></i> Hali za Agizo</h3>
+                        </div>
+                        <div class="status-overview">
+                            <div class="status-item pending">
+                                <i class="fas fa-clock"></i>
+                                <div class="status-info">
+                                    <h4 id="countPending">0</h4>
+                                    <span>Inasubiri</span>
+                                </div>
+                            </div>
+                            <div class="status-item preparing">
+                                <i class="fas fa-concierge-bell"></i>
+                                <div class="status-info">
+                                    <h4 id="countPreparing">0</h4>
+                                    <span>Inatayarishwa</span>
+                                </div>
+                            </div>
+                            <div class="status-item ready">
+                                <i class="fas fa-check-circle"></i>
+                                <div class="status-info">
+                                    <h4 id="countReady">0</h4>
+                                    <span>Imetayarishwa</span>
+                                </div>
+                            </div>
+                            <div class="status-item completed">
+                                <i class="fas fa-flag-checkered"></i>
+                                <div class="status-info">
+                                    <h4 id="countCompleted">0</h4>
+                                    <span>Imekamilika</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="admin-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-bolt"></i> Vitendo vya Haraka</h3>
+                        </div>
+                        <div class="quick-actions">
+                            <button class="action-btn" onclick="showAllOrders()">
+                                <i class="fas fa-list"></i>
+                                <span>Angalia Agizo Zote</span>
+                            </button>
+                            <button class="action-btn" onclick="showPendingOrders()">
+                                <i class="fas fa-clock"></i>
+                                <span>Angalia Inasubiri</span>
+                            </button>
+                            <button class="action-btn" onclick="showTodayRevenue()">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>Ripoti ya Leo</span>
+                            </button>
+                            <button class="action-btn" onclick="manageTables()">
+                                <i class="fas fa-chair"></i>
+                                <span>Dhibiti Meza</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- System Info -->
+                    <div class="admin-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-info-circle"></i> Taarifa za Mfumo</h3>
+                        </div>
+                        <div class="system-info">
+                            <div class="info-item">
+                                <i class="fas fa-server"></i>
+                                <div class="info-details">
+                                    <span>Hali ya API</span>
+                                    <strong id="apiStatus">Inatumika</strong>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-database"></i>
+                                <div class="info-details">
+                                    <span>Agizo Zote</span>
+                                    <strong id="totalOrdersCount">0</strong>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-utensils"></i>
+                                <div class="info-details">
+                                    <span>Vyakula kwenye Menyu</span>
+                                    <strong id="totalMenuItems">0</strong>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-clock"></i>
+                                <div class="info-details">
+                                    <span>Muda wa Mfumo</span>
+                                    <strong id="systemUptime">0 s</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order Details Modal -->
+    <div id="orderDetailsModal" class="modal">
+        <div class="modal-content wide-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-eye"></i> Maelezo ya Agizo</h3>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="orderDetailsContent">
+                    <!-- Order details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeOrderModal()">
+                    <i class="fas fa-times"></i> Funga
+                </button>
+                <button class="btn btn-primary" onclick="printOrder()">
+                    <i class="fas fa-print"></i> Chapisha
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Menu Item Modal -->
+    <div id="menuItemModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-utensils"></i> Ongeza Kipya kwenye Menyu</h3>
+                <button class="modal-close" onclick="closeMenuItemModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="menuItemForm" class="modal-form">
+                    <div class="form-group">
+                        <label for="itemName"><i class="fas fa-tag"></i> Jina la Kipya *</label>
+                        <input type="text" id="itemName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="itemDescription"><i class="fas fa-align-left"></i> Maelezo</label>
+                        <textarea id="itemDescription" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemPrice"><i class="fas fa-money-bill-wave"></i> Bei (Tsh) *</label>
+                            <input type="number" id="itemPrice" min="0" step="100" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="itemCategory"><i class="fas fa-filter"></i> Kategoria *</label>
+                            <select id="itemCategory" required>
+                                <option value="">Chagua kategoria</option>
+                                <!-- Categories will be loaded here -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemImage"><i class="fas fa-image"></i> URL ya Picha</label>
+                            <input type="url" id="itemImage" placeholder="https://example.com/image.jpg">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="itemRating"><i class="fas fa-star"></i> Ukadiriaji (0-5)</label>
+                            <input type="number" id="itemRating" min="0" max="5" step="0.1" value="4.0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-checkboxes">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="itemAvailable" checked>
+                            <label for="itemAvailable">Inapatikana</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="itemVegetarian">
+                            <label for="itemVegetarian">Mboga (Vegetarian)</label>
+                        </div>
+                        
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="itemSpicy">
+                            <label for="itemSpicy">Spicy (Ina Pilipili)</label>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="itemId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeMenuItemModal()">
+                    <i class="fas fa-times"></i> Ghairi
+                </button>
+                <button class="btn btn-primary" onclick="saveMenuItem()">
+                    <i class="fas fa-save"></i> Hifadhi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tables Management Modal -->
+    <div id="tablesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-chair"></i> Usimamizi wa Meza</h3>
+                <button class="modal-close" onclick="closeTablesModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tables-management">
+                    <div class="tables-header">
+                        <h4>Meza Zilizopo</h4>
+                        <button class="btn btn-primary btn-sm" onclick="addTable()">
+                            <i class="fas fa-plus"></i> Ongeza Meza
+                        </button>
+                    </div>
+                    
+                    <div class="tables-grid" id="tablesGrid">
+                        <!-- Tables will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-utensils"></i>
+                        <span>Delicious Restaurant</span>
+                    </div>
+                    <p>Dashibodi ya Msimamizi</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Taarifa za Mfumo</h3>
+                    <p>Version: <strong>1.0.0</strong></p>
+                    <p>Muda wa Mfumo: <strong id="footerUptime">0 s</strong></p>
+                    <p>Agizo la Mwisho: <strong id="lastOrderTime">-</strong></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Usaidizi</h3>
+                    <p><i class="fas fa-phone"></i> 0712 345 678</p>
+                    <p><i class="fas fa-envelope"></i> admin@delicious.co.tz</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Delicious Restaurant. Dashibodi ya Msimamizi.</p>
+                <div class="admin-controls">
+                    <button class="btn btn-secondary btn-sm" onclick="clearDatabase()">
+                        <i class="fas fa-trash"></i> Safisha Data (Test)
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="resetSystem()">
+                        <i class="fas fa-redo"></i> Weka Upya
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/admin.js"></script>
+    <style>
+        /* Admin Dashboard Specific Styles */
+        .admin-dashboard {
+            padding: 2rem 0;
+        }
+        
+        .admin-header {
+            margin-bottom: 2rem;
+        }
+        
+        .admin-header h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .stat-info h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .stat-info span {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+        
+        .admin-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .admin-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .admin-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* Orders Management */
+        .orders-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            min-width: 150px;
+        }
+        
+        .orders-table-container {
+            overflow-x: auto;
+        }
+        
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .orders-table thead {
+            background: var(--gray-50);
+        }
+        
+        .orders-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 2px solid var(--gray-200);
+            white-space: nowrap;
+        }
+        
+        .orders-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .orders-table tr:hover {
+            background: var(--gray-50);
+        }
+        
+        .order-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-confirmed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-preparing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-ready {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-delivered {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .payment-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .payment-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .payment-paid {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .payment-refunded {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .order-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-icon {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .action-view {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .action-edit {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .action-delete {
+            background: #fee2e2;
+            color: #ef4444;
+        }
+        
+        .action-icon:hover {
+            transform: translateY(-2px);
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-500);
+        }
+        
+        .no-data i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .page-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Menu Management */
+        .menu-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .menu-table th,
+        .menu-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .menu-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+        
+        .menu-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .availability-toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .availability-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--success);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        
+        /* Analytics Charts */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        /* Status Overview */
+        .status-overview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: var(--radius);
+        }
+        
+        .status-item.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-item.preparing {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-item.ready {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-item.completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-item i {
+            font-size: 1.5rem;
+        }
+        
+        .status-info h4 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .action-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        
+        .action-btn i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .action-btn span {
+            font-size: 0.875rem;
+            text-align: center;
+        }
+        
+        /* System Info */
+        .system-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+        
+        .info-item i {
+            font-size: 1.25rem;
+            color: var(--primary);
+            width: 30px;
+        }
+        
+        .info-details {
+            flex: 1;
+        }
+        
+        .info-details span {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+        
+        .info-details strong {
+            display: block;
+            font-size: 1rem;
+        }
+        
+        /* Modals */
+        .wide-modal {
+            max-width: 800px;
+        }
+        
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .form-checkboxes {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Tables Management */
+        .tables-management {
+            padding: 1rem;
+        }
+        
+        .tables-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+        }
+        
+        .table-card {
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        
+        .table-card.available {
+            border-color: var(--success);
+        }
+        
+        .table-card.occupied {
+            border-color: var(--danger);
+        }
+        
+        .table-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .table-seats {
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+        
+        .table-status {
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-full);
+            display: inline-block;
+        }
+        
+        .table-status.available {
+            background: var(--success-light);
+            color: var(--success-dark);
+        }
+        
+        .table-status.occupied {
+            background: var(--danger-light);
+            color: var(--danger-dark);
+        }
+        
+        /* Admin Controls in Footer */
+        .admin-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .orders-filter {
+                flex-direction: column;
+            }
+            
+            .search-input,
+            .filter-select {
+                width: 100%;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-checkboxes {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</body>
+</html>

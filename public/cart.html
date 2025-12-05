@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛒 Cart - Delicious Restaurant</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>Delicious Restaurant</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Nyumbani</a>
+                <a href="menu.html" class="nav-link"><i class="fas fa-utensils"></i> Menyu</a>
+                <a href="cart.html" class="nav-link active cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Cart Page -->
+    <section class="cart-page">
+        <div class="container">
+            <div class="cart-header">
+                <h1><i class="fas fa-shopping-cart"></i> Cart Yako</h1>
+                <p>Angalia na uhakiki agizo lako</p>
+            </div>
+            
+            <div class="cart-content">
+                <!-- Cart Items Section -->
+                <div class="cart-items-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-list"></i> Vitu Vilivyochaguliwa</h2>
+                        <button class="btn btn-secondary" onclick="clearCart()">
+                            <i class="fas fa-trash"></i> Futa Cart Yote
+                        </button>
+                    </div>
+                    
+                    <div id="cartItemsList">
+                        <!-- Cart items will be loaded here -->
+                    </div>
+                    
+                    <div id="emptyCart" class="empty-cart-message">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Cart Yako Iko Tupu</h3>
+                        <p>Ongeza vyakula kwenye cart yako kuanzia menyu yetu</p>
+                        <a href="menu.html" class="btn btn-primary">
+                            <i class="fas fa-utensils"></i> Nenda kwenye Menyu
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Order Summary Section -->
+                <div class="order-summary-section">
+                    <div class="summary-card">
+                        <h3><i class="fas fa-receipt"></i> Muhtasari wa Agizo</h3>
+                        
+                        <!-- Order Type Selection -->
+                        <div class="order-type-selection">
+                            <h4>Aina ya Agizo</h4>
+                            <div class="type-options">
+                                <div class="type-option" data-type="dine-in">
+                                    <i class="fas fa-chair"></i>
+                                    <span>Kukaa Ndani</span>
+                                </div>
+                                <div class="type-option active" data-type="takeaway">
+                                    <i class="fas fa-box"></i>
+                                    <span>Kuchukua Nje</span>
+                                </div>
+                                <div class="type-option" data-type="delivery">
+                                    <i class="fas fa-motorcycle"></i>
+                                    <span>Upelekaji</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dine-in Options (hidden by default) -->
+                        <div id="dineInOptions" class="extra-options" style="display: none;">
+                            <h4><i class="fas fa-chair"></i> Chagua Meza</h4>
+                            <div class="table-selection">
+                                <select id="tableSelect" class="form-select">
+                                    <option value="">Chagua meza...</option>
+                                </select>
+                                <div id="availableTables" class="tables-grid"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Delivery Options (hidden by default) -->
+                        <div id="deliveryOptions" class="extra-options" style="display: none;">
+                            <h4><i class="fas fa-map-marker-alt"></i> Anwani ya Upelekaji</h4>
+                            <div class="form-group">
+                                <label for="deliveryAddress"><i class="fas fa-home"></i> Anwani Kamili</label>
+                                <textarea id="deliveryAddress" rows="3" placeholder="Ingiza anwani yako kamili..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="deliveryInstructions"><i class="fas fa-sticky-note"></i> Maelezo ya Ziada</label>
+                                <textarea id="deliveryInstructions" rows="2" placeholder="Maelezo ya ufikiaji, namba ya nyumba, n.k..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Summary Details -->
+                        <div class="summary-details">
+                            <div class="detail-row">
+                                <span>Jumla ya Vitu:</span>
+                                <span id="summarySubtotal">Tsh 0</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Ada ya Usafirishaji:</span>
+                                <span id="summaryDelivery">Tsh 0</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Kodi (18%):</span>
+                                <span id="summaryTax">Tsh 0</span>
+                            </div>
+                            <div class="detail-row total">
+                                <span>Jumla ya Kulipa:</span>
+                                <span id="summaryTotal">Tsh 0</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Special Instructions -->
+                        <div class="special-instructions">
+                            <h4><i class="fas fa-sticky-note"></i> Maelezo Maalum</h4>
+                            <textarea id="specialInstructions" rows="3" placeholder="Maelezo yoyote maalum kuhusu agizo lako..."></textarea>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="continueShopping()">
+                                <i class="fas fa-arrow-left"></i> Endelea Kununua
+                            </button>
+                            <button class="btn btn-primary" onclick="proceedToCheckout()">
+                                <i class="fas fa-credit-card"></i> Endelea kwa Malipo
+                            </button>
+                        </div>
+                        
+                        <!-- Payment Methods -->
+                        <div class="payment-methods">
+                            <h4><i class="fas fa-credit-card"></i> Njia za Malipo Tunazokubali:</h4>
+                            <div class="methods">
+                                <div class="method">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span>Pesa Taslimu</span>
+                                </div>
+                                <div class="method">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>M-Pesa</span>
+                                </div>
+                                <div class="method">
+                                    <i class="fab fa-cc-visa"></i>
+                                    <span>Visa Card</span>
+                                </div>
+                                <div class="method">
+                                    <i class="fab fa-cc-mastercard"></i>
+                                    <span>Mastercard</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-utensils"></i>
+                        <span>Delicious Restaurant</span>
+                    </div>
+                    <p>Chakula bora, ladha bora, huduma bora.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Masaa ya Huduma</h3>
+                    <p>Jumatatu - Ijumaa: 8:00 AM - 10:00 PM</p>
+                    <p>Jumamosi - Jumapili: 9:00 AM - 11:00 PM</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Mawasiliano</h3>
+                    <p><i class="fas fa-phone"></i> 0712 345 678</p>
+                    <p><i class="fas fa-envelope"></i> info@delicious.co.tz</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Delicious Restaurant. Haki zote zimehifadhiwa.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/cart.js"></script>
+    <style>
+        /* Cart Page Specific Styles */
+        .cart-page {
+            padding: 3rem 0;
+        }
+        
+        .cart-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .cart-header h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .cart-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+        
+        .cart-items-section {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+        
+        .cart-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .cart-item-image {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .cart-item-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .cart-item-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .cart-item-description {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gray-100);
+            border-radius: var(--radius);
+            padding: 0.5rem;
+        }
+        
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+        
+        .qty-btn:hover {
+            background: var(--gray-200);
+        }
+        
+        .qty-value {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .cart-item-total {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+        
+        .empty-cart-message {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        
+        .empty-cart-message i {
+            font-size: 4rem;
+            color: var(--gray-300);
+            margin-bottom: 1.5rem;
+        }
+        
+        .empty-cart-message h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Order Summary */
+        .order-summary-section {
+            position: sticky;
+            top: 100px;
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .summary-card h3 {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .order-type-selection {
+            margin-bottom: 2rem;
+        }
+        
+        .order-type-selection h4 {
+            margin-bottom: 1rem;
+            color: var(--gray-700);
+        }
+        
+        .type-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .type-option {
+            background: var(--gray-100);
+            padding: 1rem;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .type-option:hover,
+        .type-option.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+        }
+        
+        .type-option i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .extra-options {
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+        
+        .extra-options h4 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 1rem;
+        }
+        
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.5rem;
+        }
+        
+        .table-option {
+            background: var(--gray-100);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+        
+        .table-option:hover,
+        .table-option.selected {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+        
+        .table-option.occupied {
+            background: var(--danger-light);
+            color: var(--danger);
+            cursor: not-allowed;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray-700);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-family: 'Poppins', sans-serif;
+            resize: vertical;
+        }
+        
+        .summary-details {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .detail-row.total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            border-top: 2px solid var(--gray-300);
+            padding-top: 0.75rem;
+            margin-top: 0.75rem;
+        }
+        
+        .special-instructions {
+            margin: 1.5rem 0;
+        }
+        
+        .special-instructions h4 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .payment-methods {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .payment-methods h4 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .methods {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .method {
+            background: var(--gray-100);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .method i {
+            font-size: 1.5rem;
+            color: var(--gray-600);
+        }
+        
+        @media (max-width: 1024px) {
+            .cart-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-summary-section {
+                position: static;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .cart-item {
+                flex-direction: column;
+            }
+            
+            .cart-item-image {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .type-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍽️ Delicious Restaurant - Chakula Bora</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>Delicious Restaurant</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active"><i class="fas fa-home"></i> Nyumbani</a>
+                <a href="menu.html" class="nav-link"><i class="fas fa-utensils"></i> Menyu</a>
+                <a href="#about" class="nav-link"><i class="fas fa-info-circle"></i> Kuhusu</a>
+                <a href="#contact" class="nav-link"><i class="fas fa-phone"></i> Mawasiliano</a>
+                <a href="cart.html" class="nav-link cart-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="admin.html" class="nav-link admin-link">
+                    <i class="fas fa-user-cog"></i> Admin
+                </a>
+            </div>
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="highlight">Chakula Bora</span><br>
+                    Kushawishi Saa Zote
+                </h1>
+                <p class="hero-subtitle">Tengeneza maagizo yako mtandaoni kwa urahisi na upokee kwa haraka</p>
+                <div class="hero-buttons">
+                    <a href="menu.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-utensils"></i> Angalia Menyu
+                    </a>
+                    <a href="#order-now" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-bolt"></i> Agiza Sasa
+                    </a>
+                </div>
+                <div class="hero-features">
+                    <div class="feature">
+                        <i class="fas fa-shipping-fast"></i>
+                        <span>Upelekaji wa Bure</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-clock"></i>
+                        <span>24/7 Huduma</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-star"></i>
+                        <span>Ubora wa Juu</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>Malipo Salama</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=600&fit=crop" alt="Restaurant Interior">
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Order Section -->
+    <section id="order-now" class="section quick-order">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-bolt"></i> Agiza Haraka</h2>
+                <p>Chagua aina ya agizo lako</p>
+            </div>
+            <div class="order-types">
+                <div class="order-type-card" onclick="setOrderType('dine-in')">
+                    <div class="order-type-icon">
+                        <i class="fas fa-chair"></i>
+                    </div>
+                    <h3>Kukaa Ndani</h3>
+                    <p>Furahia chakula chetu katika mazingira yetu ya kupendeza</p>
+                    <a href="menu.html?type=dine-in" class="btn btn-outline">Agiza Sasa</a>
+                </div>
+                <div class="order-type-card" onclick="setOrderType('takeaway')">
+                    <div class="order-type-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <h3>Kuchukua Nje</h3>
+                    <p>Chukua chakula chako na uende nacho popote unapopenda</p>
+                    <a href="menu.html?type=takeaway" class="btn btn-outline">Agiza Sasa</a>
+                </div>
+                <div class="order-type-card" onclick="setOrderType('delivery')">
+                    <div class="order-type-icon">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <h3>Upelekaji</h3>
+                    <p>Chakula kikufikishwe mlangoni mwako kwa haraka</p>
+                    <a href="menu.html?type=delivery" class="btn btn-outline">Agiza Sasa</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Dishes -->
+    <section class="section popular-dishes">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-fire"></i> Vyakula Maarufu</h2>
+                <p>Vibali vilivyopendwa na wateja wetu</p>
+            </div>
+            <div class="dishes-grid" id="popularDishes">
+                <!-- Popular dishes will be loaded here -->
+            </div>
+            <div class="text-center">
+                <a href="menu.html" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> Angalia Menyu Kamili
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-play-circle"></i> Jinsi Inavyofanya Kazi</h2>
+                <p>Hatua 4 rahisi za kupata chakula chako</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="fas fa-list-alt"></i>
+                    </div>
+                    <h3>Chagua Chakula</h3>
+                    <p>Pitia menyu yetu na uchague vyakula unavyovipenda</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="fas fa-cart-plus"></i>
+                    </div>
+                    <h3>Ongeza kwa Cart</h3>
+                    <p>Ongeza vyakula kwenye cart yako na uhakiki kiasi</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Malipo</h3>
+                    <p>Chagua njia ya malipo na ulipe agizo lako</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="fas fa-motorcycle"></i>
+                    </div>
+                    <h3>Pokee Chakula</h3>
+                    <p>Pokea chakula chako kwa urahisi na ufurahie</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2><i class="fas fa-info-circle"></i> Kuhusu Delicious Restaurant</h2>
+                    <p>Tunatoa huduma ya chakula bora tangu 2010. Tumekuwa tukikidhi mapato ya wateja wetu kwa ubora wa juu, ladha bora na huduma bora.</p>
+                    <div class="about-features">
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Vyakula Vitamu</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Viungo Safi</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Wafanyakazi Waliofundishwa</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Bei Nafuu</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&h=500&fit=crop" alt="About Restaurant">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-comment-alt"></i> Maoni ya Wateja</h2>
+                <p>Wateja wetu wanachosema</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Chakula kizuri kabisa! Huduma ya haraka na bei nafuu. Nimekuwa mtewa wa kudumu kwa miaka 2 sasa."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>John Mwamba</h4>
+                            <span class="author-role">Mteja wa Kudumu</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Biryani yao ni bora niliyowahi kula! Upelekaji haraka na chakula bado kipo moto unapokifika."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Sarah Chuma</h4>
+                            <span class="author-role">Mteja wa Kampuni</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Ninaagiza kila juma kutoka hapa. Ubora wa kudumu na huduma bora. Wanashika ahadi zao."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <h4>Robert Kimani</h4>
+                            <span class="author-role">Mteja wa Nyumbani</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact-section">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-phone"></i> Mawasiliano</h2>
+                <p>Wasiliana nasi kwa maswali yoyote</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Eneo</h3>
+                            <p>Uhuru Street, Dar es Salaam</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Simu</h3>
+                            <p>+255 712 345 678</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Barua Pepe</h3>
+                            <p>info@delicious.co.tz</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h3>Masaa ya Kazi</h3>
+                            <p>Jumatatu - Ijumaa: 8:00 AM - 10:00 PM</p>
+                            <p>Jumamosi - Jumapili: 9:00 AM - 11:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-map">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Ramani ya Eneo Letu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-utensils"></i>
+                        <span>Delicious Restaurant</span>
+                    </div>
+                    <p>Chakula bora, ladha bora, huduma bora. Tunahakikisha ufurahie chakula chetu katika kila kisu.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Haraka Linki</h3>
+                    <ul>
+                        <li><a href="index.html">Nyumbani</a></li>
+                        <li><a href="menu.html">Menyu</a></li>
+                        <li><a href="#about">Kuhusu</a></li>
+                        <li><a href="#contact">Mawasiliano</a></li>
+                        <li><a href="cart.html">Cart Yangu</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Huduma</h3>
+                    <ul>
+                        <li><a href="#">Kukaa Ndani</a></li>
+                        <li><a href="#">Kuchukua Nje</a></li>
+                        <li><a href="#">Upelekaji</a></li>
+                        <li><a href="#">Huduma ya Wageni</a></li>
+                        <li><a href="#">Maagizo Maalum</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Wasiliana Nasi</h3>
+                    <p><i class="fas fa-phone"></i> 0712 345 678</p>
+                    <p><i class="fas fa-envelope"></i> info@delicious.co.tz</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Uhuru Street, Dar es Salaam</p>
+                    <div class="newsletter">
+                        <input type="email" placeholder="Barua pepe yako">
+                        <button class="btn btn-primary">Jiandikishe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Delicious Restaurant. Haki zote zimehifadhiwa. | 
+                    <a href="#">Sera ya Faragha</a> | 
+                    <a href="#">Masharti ya Matumizi</a>
+                </p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa" title="Visa"></i>
+                    <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+                    <i class="fab fa-cc-paypal" title="PayPal"></i>
+                    <i class="fas fa-money-bill-wave" title="Cash"></i>
+                    <i class="fas fa-mobile-alt" title="Mobile Money"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Live Order Status -->
+    <div class="live-status">
+        <div class="status-content">
+            <i class="fas fa-concierge-bell"></i>
+            <span>Agizo 5 zinafanyiwa kazi sasa</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script>
+        // Load popular dishes
+        async function loadPopularDishes() {
+            try {
+                const response = await fetch('/api/menu');
+                if (response.ok) {
+                    const data = await response.json();
+                    const popularDishes = data.data.slice(0, 4); // Get first 4 items
+                    
+                    const dishesGrid = document.getElementById('popularDishes');
+                    if (dishesGrid) {
+                        dishesGrid.innerHTML = popularDishes.map(dish => `
+                            <div class="dish-card">
+                                <div class="dish-image">
+                                    <img src="${dish.image}" alt="${dish.name}">
+                                    ${!dish.available ? '<div class="unavailable">Haipatikani</div>' : ''}
+                                    ${dish.spicy ? '<div class="spicy-label"><i class="fas fa-pepper-hot"></i> Spicy</div>' : ''}
+                                    ${dish.vegetarian ? '<div class="veg-label"><i class="fas fa-leaf"></i> Vegetarian</div>' : ''}
+                                </div>
+                                <div class="dish-info">
+                                    <h3>${dish.name}</h3>
+                                    <p class="dish-description">${dish.description}</p>
+                                    <div class="dish-meta">
+                                        <span class="dish-category">${dish.category}</span>
+                                        <span class="dish-rating">
+                                            <i class="fas fa-star"></i> ${dish.rating}
+                                        </span>
+                                    </div>
+                                    <div class="dish-footer">
+                                        <span class="dish-price">Tsh ${dish.price.toLocaleString()}</span>
+                                        <button class="btn btn-primary btn-sm" onclick="addToCart(${dish.id})" ${!dish.available ? 'disabled' : ''}>
+                                            <i class="fas fa-cart-plus"></i> Ongeza
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading popular dishes:', error);
+            }
+        }
+
+        // Set order type
+        function setOrderType(type) {
+            localStorage.setItem('orderType', type);
+            updateCartCount();
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const cartCount = document.querySelector('.cart-count');
+            if (cartCount) {
+                cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            }
+        }
+
+        // Add to cart
+        function addToCart(itemId) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existingItem = cart.find(item => item.itemId === itemId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    itemId: itemId,
+                    quantity: 1,
+                    addedAt: new Date().toISOString()
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            
+            // Show notification
+            showNotification('Imeongezwa kwenye cart!');
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPopularDishes();
+            updateCartCount();
+            
+            // Check API health
+            fetch('/api/health').then(response => {
+                if (!response.ok) {
+                    console.warn('API is not responding');
+                }
+            }).catch(error => {
+                console.error('API connection error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
